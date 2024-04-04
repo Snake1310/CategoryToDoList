@@ -1,0 +1,27 @@
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Set default font and link styles */
+body {
+  font-family: Poppins;
+  margin: 0;
+  padding: 0;
+  background-image: url('./assets/background-img.png'); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  /* height: 100vh;  */
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.App {
+  margin: 163px 240px;
+}
