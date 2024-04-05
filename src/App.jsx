@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import style from "./App.module.css";
 import Category from "./Category/Category.jsx";
@@ -9,71 +9,67 @@ function App() {
     return savedCategories ? JSON.parse(savedCategories) : [];
   });
 
-  useEffect(() => {
-    localStorage.setItem("categories", JSON.stringify(categories));
-  }, [categories]);
+  const updateCategories = (newCategories) => {
+    setCategories(newCategories);
+    localStorage.setItem("categories", JSON.stringify(newCategories));
+  };
 
   const addCategory = () => {
     const title = prompt("Introduceti titlul categoriei:");
     if (title) {
-      setCategories((prevCategories) => [
-        ...prevCategories,
-        { title, listElements: [] },
-      ]);
+      const newCategory = {
+        title: title,
+        listElements: [],
+        listElementsCount: 0,
+      };
+      updateCategories([...categories, newCategory]);
     }
   };
 
   const editCategory = (categoryIndex, newTitle) => {
-    setCategories((prevCategories) => {
-      const newCategories = [...prevCategories];
-      newCategories[categoryIndex] = {
-        ...newCategories[categoryIndex],
-        title: newTitle,
-      };
-      return newCategories;
-    });
+    const newCategories = [...categories];
+    newCategories[categoryIndex] = {
+      ...newCategories[categoryIndex],
+      title: newTitle,
+    };
+    updateCategories(newCategories);
   };
 
   const removeCategory = (index) => {
-    setCategories((prevCategories) =>
-      prevCategories.filter((_, i) => i !== index)
-    );
+    const newCategories = [...categories];
+    newCategories.splice(index, 1);
+    updateCategories(newCategories);
   };
 
   const addElement = (categoryIndex, element) => {
-    setCategories((prevCategories) => {
-      const newCategories = [...prevCategories];
-      newCategories[categoryIndex] = {
-        ...newCategories[categoryIndex],
-        listElements: [...newCategories[categoryIndex].listElements, element],
-      };
-      return newCategories;
-    });
+    const newCategories = [...categories];
+    newCategories[categoryIndex] = {
+      ...newCategories[categoryIndex],
+      listElements: [...newCategories[categoryIndex].listElements, element],
+      listElementsCount: newCategories[categoryIndex].listElementsCount + 1,
+    };
+    updateCategories(newCategories);
   };
 
   const removeElement = (categoryIndex, listElementIndex) => {
-    setCategories((prevCategories) => {
-      const newCategories = [...prevCategories];
-      newCategories[categoryIndex].listElements.splice(listElementIndex, 1);
-      return newCategories;
-    });
+    const newCategories = [...categories];
+    newCategories[categoryIndex].listElements.splice(listElementIndex, 1);
+    newCategories[categoryIndex].listElementsCount--;
+    updateCategories(newCategories);
   };
 
   const editElement = (categoryIndex, listElementIndex, newTitle) => {
-    setCategories((prevCategories) => {
-      const newCategories = [...prevCategories];
-      newCategories[categoryIndex].listElements[listElementIndex] = newTitle;
-      return newCategories;
-    });
+    const newCategories = [...categories];
+    newCategories[categoryIndex].listElements[listElementIndex] = newTitle;
+    updateCategories(newCategories);
   };
-  
+
   const handleSort = (draggedIndex, dropIndex) => {
-    console.log(draggedIndex, dropIndex)
     const newCategories = [...categories];
     const draggedCategory = newCategories[draggedIndex];
     newCategories.splice(draggedIndex, 1);
     newCategories.splice(dropIndex, 0, draggedCategory);
-    setCategories(newCategories);
+    updateCategories(newCategories);
   };
 
   return (
@@ -86,6 +82,7 @@ function App() {
           index={index}
           title={category.title}
           listElements={category.listElements}
+          listElementsCount={category.listElementsCount}
           onEditCategory={(newTitle) => editCategory(index, newTitle)}
           onRemoveCategory={() => removeCategory(index)}
           onAddElement={(element) => addElement(index, element)}

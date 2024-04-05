@@ -11,6 +11,7 @@ const Category = ({
   onHandleSort,
   title,
   listElements,
+  listElementsCount,
   onEditCategory,
   onRemoveCategory,
   onAddElement,
@@ -76,6 +77,7 @@ const Category = ({
           onClick={handleToggleDropdown}
         >
           <h2>{title}</h2>
+          <span>{listElementsCount}</span>
           {isOpen ? <FaChevronDown /> : <FaChevronUp />}
         </div>
         <div>
@@ -110,6 +112,7 @@ Category.propTypes = {
   title: PropTypes.string.isRequired,
   onHandleSort: PropTypes.func.isRequired,
   listElements: PropTypes.array.isRequired,
+  listElementsCount: PropTypes.number.isRequired,
   onEditCategory: PropTypes.func.isRequired,
   onRemoveCategory: PropTypes.func.isRequired,
   onAddElement: PropTypes.func.isRequired,
